@@ -1060,7 +1060,9 @@
         body: data
       }).then(function (response) {
         return response.json();
-      }).then(function (data) {
+      }) //@todo: add retries
+      //@todo: add auth headers
+      .then(function (data) {
         console.log('Success:', data);
       })["catch"](function (error) {
         console.error('Error:', error);
