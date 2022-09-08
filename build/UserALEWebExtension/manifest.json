@@ -23,7 +23,7 @@
       "matches": [
         "<all_urls>"
       ],
-      "js": ["content.js", "custom.js"],
+      "js": ["custom.js", "content.js"],
       "all_frames": true
     }
   ],
