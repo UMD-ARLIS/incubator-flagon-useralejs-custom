@@ -460,6 +460,14 @@ function setLogFilter(callback) {
   filterHandler = callback;
 }
 /**
+ * Assigns a handler to transform logs from their default structure.
+ * @param  {Function} callback The handler to invoke when logging.
+ */
+
+function setLogMapper(callback) {
+  mapHandler = callback;
+}
+/**
  * Assigns the config and log container to be used by the logging functions.
  * @param  {Array} newLogs   Log container.
  * @param  {Object} newConfig Configuration to use while logging.
@@ -1143,10 +1151,11 @@ function queueLog(log) {
 function injectScript(config) {
   options(config); //  start();  not necessary given that autostart in place, and option is masked from WebExt users
 
-  setLogFilter(function (log) {
+  setLogMapper(function (log) {
     queueLog(Object.assign({}, log, {
       pageUrl: document.location.href
     }));
+    console.log(log);
     return false;
   });
 }
@@ -1160,6 +1169,13 @@ browser.runtime.onMessage.addListener(function (message) {
       toolVersion: message.payload.toolVersion
     });
   }
+}); //Add additional custom scripts below this line
+//=============================================
+
+setLogFilter(function (log) {
+  var type_array = ['mouseup', 'mouseover', 'mousedown', 'keydown', 'dblclick', 'blur', 'focus', 'input', 'wheel'];
+  var logType_array = ['interval'];
+  return !type_array.includes(log.type) && !logType_array.includes(log.logType);
 });
 /*
  eslint-enable
