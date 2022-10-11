@@ -72,7 +72,7 @@ In the meantime, the only workaround is to disable the related security option i
 
 ## Adding Custom Scripts
 
-We can add custom scripts to the `content.js` file. Once the custom scripts are added, we can run *npm run build* which will build the web extension with the new scripts added. 
+We can add custom scripts to the `content.js` file. Once the custom scripts are added, we can run `*npm run build*` which will build the web extension with the new scripts added. 
 
 At the very bottom of `content.js`, there is a pre-defined section for custom scripts to be added. 
 
