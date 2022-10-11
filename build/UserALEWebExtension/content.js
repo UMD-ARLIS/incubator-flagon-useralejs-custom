@@ -452,14 +452,6 @@ var intervalLog;
 var filterHandler = null;
 var mapHandler = null;
 /**
- * Assigns a handler to filter logs out of the queue.
- * @param  {Function} callback The handler to invoke when logging.
- */
-
-function setLogFilter(callback) {
-  filterHandler = callback;
-}
-/**
  * Assigns a handler to transform logs from their default structure.
  * @param  {Function} callback The handler to invoke when logging.
  */
@@ -1169,14 +1161,9 @@ browser.runtime.onMessage.addListener(function (message) {
       toolVersion: message.payload.toolVersion
     });
   }
-}); //Add additional custom scripts below this line
-//=============================================
-
-setLogFilter(function (log) {
-  var type_array = ['mouseup', 'mouseover', 'mousedown', 'keydown', 'dblclick', 'blur', 'focus', 'input', 'wheel'];
-  var logType_array = ['interval'];
-  return !type_array.includes(log.type) && !logType_array.includes(log.logType);
 });
 /*
  eslint-enable
  */
+//Add additional custom scripts below this line
+//=============================================
