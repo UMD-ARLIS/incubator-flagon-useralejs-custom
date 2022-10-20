@@ -19,7 +19,7 @@
 
 import * as globals from './globals';
 import * as MessageTypes from './messageTypes.js';
-import { filter, options, start } from '../main.js';
+import { filter, options, map, start } from '../main.js';
 
 // browser is defined in firefox, but not in chrome. In chrome, they use
 // the 'chrome' global instead. Let's map it to browser so we don't have
@@ -55,10 +55,11 @@ function queueLog(log) {
 function injectScript(config) {
   options(config);
 //  start();  not necessary given that autostart in place, and option is masked from WebExt users
-  filter(function (log) {
+  map(function (log) {
     queueLog(Object.assign({}, log, {
       pageUrl: document.location.href,
     }));
+    console.log(log);
     return false;
   });
 }
@@ -77,3 +78,6 @@ browser.runtime.onMessage.addListener(function (message) {
 /*
  eslint-enable
  */
+
+ //Add additional custom scripts below this line
+//=============================================
