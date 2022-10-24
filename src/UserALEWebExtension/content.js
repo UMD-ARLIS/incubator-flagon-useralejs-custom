@@ -78,68 +78,11 @@ browser.runtime.onMessage.addListener(function (message) {
 //Add additional custom scripts below this line
 //=============================================
 
-filter(function (log) {
-  var type_array = ['mouseup', 'mouseover', 'mousedown', 'keydown', 'dblclick', 'blur', 'focus', 'input', 'wheel'];
-  var logType_array = ['interval'];
-  return !type_array.includes(log.type) && !logType_array.includes(log.logType);
-});
-
-
-function parseXml(xmlStr) {
-  return new window.DOMParser().parseFromString(xmlStr, "text/xml");
-}
-
-
-function xmlProperties(event, attributes) {
-  /**
-   *      Input:
-   * event: The event whose target data will be logged
-   * attributes: The attributes of the target to be logged, a string of CSS Attribute selectors
-   * 
-   *      Output:
-   * A log for the string of attributes.
-   */
-
-  let log = { description: "Chosen attributes of selected event target ",
-              logType: "custom"}
-
-   let serializer = new XMLSerializer(); 
-   let xmlString = serializer.serializeToString(event.target);
-   let xml = parseXml(xmlString);
-   let attr = ''
-   let elem = ''
-
-   for (let i = 0; i < attributes.length; i++) {
-      cssfmt = '[' + attributes[i] + ']'
-      // console.log('looped for ' + i + 'times!')
-      // console.log(cssfmt)
-      elem = xml.querySelector(cssfmt);
-      if (elem != null){
-          attr = elem.getAttribute(attributes[i])
-          // console.log(elem.getAttribute(attributes[i]));
-          log[attributes[i]] = attr
-      }
-      else{
-          // console.log("ERROR: Custom attribute [" + attributes[i] + "] could not be found");
-      }
-   }
-  return log
-}
-
-window.addEventListener('click', function(e) {
-  var e_path = buildPath(e);
-  // console.log('click!');
-  finlog = xmlProperties(e, ['data-info', 'class']);
-  decoded = JSON.parse(finlog['data-info']);
-  // console.log(e_path)
- 
-     if (e_path.includes('div.superset-legacy-chart-world-map') == true){
-         //console.log(decoded.name)
-         finlog['countryName'] = decoded.name;
-         finlog['path'] = e_path;
-         packageCustomLog(finlog);
-     }
-})
+// filter(function (log) {
+//   var type_array = ['mouseup', 'mouseover', 'mousedown', 'keydown', 'dblclick', 'blur', 'focus', 'input', 'wheel'];
+//   var logType_array = ['interval'];
+//   return !type_array.includes(log.type) && !logType_array.includes(log.logType);
+// });
 
 /*
  eslint-enable

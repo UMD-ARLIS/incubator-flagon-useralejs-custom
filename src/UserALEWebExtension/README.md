@@ -69,3 +69,11 @@ There is a known issue when attemping to gather logs from a page running on HTTP
 In the meantime, the only workaround is to disable the related security option in the browser:
 * [Chrome](https://superuser.com/questions/487748/how-to-allow-chrome-browser-to-load-insecure-content)
 * [Firefox](https://support.mozilla.org/en-US/kb/mixed-content-blocking-firefox)
+
+## FireFox MV3 Implementation Usefull Links
+
+https://blog.mozilla.org/addons/2022/05/18/manifest-v3-in-firefox-recap-next-steps/
+https://extensionworkshop.com/documentation/develop/manifest-v3-migration-guide/
+https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Background_scripts#specify_the_background_scripts
+https://stackoverflow.com/questions/73440104/failing-to-export-to-background-js-from-a-common-script-under-firefox-with-mv3
+https://developer.chrome.com/docs/extensions/mv3/mv3-migration/#man-sw
