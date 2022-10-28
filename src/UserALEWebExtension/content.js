@@ -19,7 +19,7 @@
 
 import * as globals from './globals';
 import * as MessageTypes from './messageTypes.js';
-import { filter, options, map } from '../main.js';
+import { filter, options, map, packageCustomLog, buildPath } from '../main.js';
 
 // browser is defined in firefox, but not in chrome. In chrome, they use
 // the 'chrome' global instead. Let's map it to browser so we don't have
@@ -82,9 +82,29 @@ browser.runtime.onMessage.addListener(function (message) {
 //Add additional custom scripts below this line
 //=============================================
 
+//filters out certain events from creating a log
 filter(function (log) {
   var type_array = ['mouseup', 'mouseover', 'mousedown', 'keydown', 'dblclick', 'blur', 'focus', 'input', 'wheel'];
   var logType_array = ['interval'];
   return !type_array.includes(log.type) && !logType_array.includes(log.logType);
 });
+
+//logs attributes from SVGs, Canvas, and other data that's attached to HTML
+window.addEventListener('click', function(e) {
+  let log = { description: "Attributes of event target ",
+      logType: "custom",
+      path: buildPath(e),
+      attributes: e.target.attributes};
+  packageCustomLog(log);
+ });
+
+// window.addEventListener('click', function(e){
+//   map((function(log){
+//     queueLog(Object.assign({}, log, {
+//       pageUrl: document.location.href,
+//     }));
+//   }))
+// })
+
+
 

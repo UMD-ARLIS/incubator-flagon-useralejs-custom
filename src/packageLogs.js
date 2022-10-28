@@ -340,3 +340,10 @@ export function detectBrowser() {
         'version': browser ? browser.version : ''
     };
 }
+
+// Custom Functions
+// ================
+
+export function buildAttributes(event){
+
+}

@@ -767,7 +767,7 @@ function detectBrowser() {
     'browser': browser$1 ? browser$1.name : '',
     'version': browser$1 ? browser$1.version : ''
   };
-}
+} // Custom Functions
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -1175,9 +1175,26 @@ browser.runtime.onMessage.addListener(function (message) {
  */
 //Add additional custom scripts below this line
 //=============================================
+//filters out certain events from creating a log
 
 setLogFilter(function (log) {
   var type_array = ['mouseup', 'mouseover', 'mousedown', 'keydown', 'dblclick', 'blur', 'focus', 'input', 'wheel'];
   var logType_array = ['interval'];
   return !type_array.includes(log.type) && !logType_array.includes(log.logType);
-});
+}); //logs attributes from SVGs, Canvas, and Data that's attached to HTML
+
+window.addEventListener('click', function (e) {
+  var log = {
+    description: "Attributes of event target ",
+    logType: "custom",
+    path: buildPath(e),
+    attributes: e.target.attributes
+  };
+  packageCustomLog(log);
+}); // window.addEventListener('click', function(e){
+//   map((function(log){
+//     queueLog(Object.assign({}, log, {
+//       pageUrl: document.location.href,
+//     }));
+//   }))
+// })

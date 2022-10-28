@@ -755,7 +755,7 @@
       'browser': browser ? browser.name : '',
       'version': browser ? browser.version : ''
     };
-  }
+  } // Custom Functions
 
   /*
    * Licensed to the Apache Software Foundation (ASF) under one or more
