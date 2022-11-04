@@ -90,6 +90,8 @@ export function packageLog(e, detailFcn) {
   let log = {
     'target' : getSelector(e.target),
     'path' : buildPath(e),
+    'attributes' : buildAttributes(e),
+    'style' : buildCSS(e),
     'pageUrl': window.location.href,
     'pageTitle': document.title,
     'pageReferrer': document.referrer,
@@ -344,6 +346,41 @@ export function detectBrowser() {
 // Custom Functions
 // ================
 
-export function buildAttributes(event){
+/**
+ * Builds an object containing all attributes of an element.
+ * Attempts to parse all attribute values as JSON text.
+ * @param  {Object} e Event from which the attributes should be extracted from.
+ * @return {Object} Object with all element attributes as key value pairs.
+ */
+export function buildAttributes(e){
+  let attributes = {};
+  let attributeBlackList = ["style"];
+  if(e.target && e.target instanceof Element) {
+    for(attr of e.target.attributes) {
+      if(attributeBlackList.includes(attr.name))
+        continue;
+      let val = attr.value;
+      try {
+        val = JSON.parse(val);
+      } catch (error) {}
+      attributes[attr.name] = val;
+    }
+  }
+  return attributes;
+}
 
+/**
+ * Builds an object containing all css properties of an element.
+ * @param  {Object} e Event from which the properties should be extracted from.
+ * @return {Object} Object with all CSS properties as key value pairs.
+ */
+export function buildCSS(e) {
+  let properties = {};
+  if(e.target && e.target instanceof Element) {
+    let styleObj = e.target.style
+    for(prop of styleObj) {
+      properties[prop] = styleObj.getPropertyValue(prop);
+    }
+  }
+  return properties;
 }

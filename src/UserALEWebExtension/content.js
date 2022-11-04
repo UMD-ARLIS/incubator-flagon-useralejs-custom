@@ -90,21 +90,14 @@ filter(function (log) {
 });
 
 //logs attributes from SVGs, Canvas, and other data that's attached to HTML
-window.addEventListener('click', function(e) {
-  let log = { description: "Attributes of event target ",
-      logType: "custom",
-      path: buildPath(e),
-      attributes: e.target.attributes};
-  packageCustomLog(log);
- });
+// window.addEventListener('click', function(e) {
+//   let log = { description: "Attributes of event target ",
+//       logType: "custom",
+//       path: buildPath(e),
+//       attributes: e.target.attributes};
+//   packageCustomLog(log);
+//  });
 
-// window.addEventListener('click', function(e){
-//   map((function(log){
-//     queueLog(Object.assign({}, log, {
-//       pageUrl: document.location.href,
-//     }));
-//   }))
-// })
 
 
 
