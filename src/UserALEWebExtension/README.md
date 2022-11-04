@@ -77,3 +77,20 @@ https://extensionworkshop.com/documentation/develop/manifest-v3-migration-guide/
 https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Background_scripts#specify_the_background_scripts
 https://stackoverflow.com/questions/73440104/failing-to-export-to-background-js-from-a-common-script-under-firefox-with-mv3
 https://developer.chrome.com/docs/extensions/mv3/mv3-migration/#man-sw
+
+## How to load into FireFox
+
+Make sure you have the [latest version of FireFox](https://www.mozilla.org/en-US/firefox/new/) installed.
+
+Once you install FireFox, in your browser search bar, go to `about:config` and toggle the followings:
+
+* `extensions.manifestV3.enabled` -> **true**
+* `xpinstall.signatures.required` -> **false**
+* `xpinstall.signatures.required` -> **false**
+* `extensions.backgroundServiceWorker.enabled`- > **true**
+
+Next, in the search bar, go to `about:debugging` and navigate to `This FireFox`->`Load Temporary Add-on` and select the `manifest.josn` from the build folder of the web extension.
+
+Lastly, go to `about:addons`, click the *3 dots* on the **UserALE Extension** and go to the `permissions` tab and toggle the `Access your data for all websites` to be **on**.
+
+You should now start to see logs get generated in the console of the browser (You can access the console by pressing *F12* on your keyboard).

@@ -195,9 +195,6 @@ browser.tabs.onZoomChange.addListener(function (e) {
   });
 });
 
-browser.browserAction.onClicked.addListener(async function (tab) {
-  console.log("clicked on extension icon");
-});
 /*
  eslint-enable
  */
