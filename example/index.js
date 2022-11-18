@@ -40,6 +40,19 @@ window.userale.filter(function (log) {
     return !type_array.includes(log.type) && !logType_array.includes(log.logType);
 });
 
+/**Additional Attributes API
+/**The following function allows us to log additional attributes
+ * that are attached to an HTML, SVG, or Canvas
+ * Please note this will generate a new custom log.
+ */
+ document.addEventListener('click', function(e) {
+    let log = { description: "Attributes of event target ",
+        logType: "custom",
+        path: buildPath(e),
+        attributes: e.target.attributes};
+    window.userale.packageCustomLog(log);
+   });
+   
 /**Log Mapping API
  *
  * the 'map' API allows you to add or modify new fields to your logs
