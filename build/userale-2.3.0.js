@@ -50,25 +50,23 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+
   var sessionId = null;
+
   /**
    * Extracts the initial configuration settings from the
    * currently executing script tag.
    * @return {Object} The extracted configuration object
    */
-
   function getInitialSettings() {
     var settings = {};
-
     if (sessionId === null) {
       sessionId = getSessionId('userAleSessionId', 'session_' + String(Date.now()));
     }
-
     var script = document.currentScript || function () {
       var scripts = document.getElementsByTagName('script');
       return scripts[scripts.length - 1];
     }();
-
     var get = script ? script.getAttribute.bind(script) : function () {
       return null;
     };
@@ -89,30 +87,28 @@
     settings.sendProtocol = get('data-protocol') === 'fetch' ? false : 'XMLHttpRequest';
     return settings;
   }
+
   /**
    * defines sessionId, stores it in sessionStorage, checks to see if there is a sessionId in
    * storage when script is started. This prevents events like 'submit', which refresh page data
    * from refreshing the current user session
    *
    */
-
   function getSessionId(sessionKey, value) {
     if (window.sessionStorage.getItem(sessionKey) === null) {
       window.sessionStorage.setItem(sessionKey, JSON.stringify(value));
       return value;
     }
-
     return JSON.parse(window.sessionStorage.getItem(sessionKey));
   }
+
   /**
    * Creates a function to normalize the timestamp of the provided event.
    * @param  {Object} e An event containing a timeStamp property.
    * @return {timeStampScale~tsScaler}   The timestamp normalizing function.
    */
-
   function timeStampScale(e) {
     var tsScaler;
-
     if (e.timeStamp && e.timeStamp > 0) {
       var delta = Date.now() - e.timeStamp;
       /**
@@ -127,7 +123,6 @@
         };
       } else if (delta > e.timeStamp) {
         var navStart = performance.timing.navigationStart;
-
         tsScaler = function tsScaler(ts) {
           return ts + navStart;
         };
@@ -141,7 +136,6 @@
         return Date.now();
       };
     }
-
     return tsScaler;
   }
 
@@ -174,30 +168,26 @@
     Object.keys(newConfig).forEach(function (option) {
       if (option === 'userFromParams') {
         var userId = getUserIdFromParams(newConfig[option]);
-
         if (userId) {
           config.userId = userId;
         }
       }
-
       config[option] = newConfig[option];
     });
-
     if (configAutostart === false || newConfigAutostart === false) {
       config['autostart'] = false;
     }
   }
+
   /**
    * Attempts to extract the userid from the query parameters of the URL.
    * @param  {string} param The name of the query parameter containing the userid.
    * @return {string|null}       The extracted/decoded userid, or null if none is found.
    */
-
   function getUserIdFromParams(param) {
     var userField = param;
     var regex = new RegExp('[?&]' + userField + '(=([^&#]*)|&|#|$)');
     var results = window.location.href.match(regex);
-
     if (results && results[2]) {
       return decodeURIComponent(results[2].replace(/\+/g, ' '));
     } else {
@@ -412,14 +402,13 @@
   }
 
   function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
   function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
   function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
   var browser = detect();
   var logs$1;
-  var config$1; // Interval Logging Globals
+  var config$1;
 
+  // Interval Logging Globals
   var intervalID;
   var intervalType;
   var intervalPath;
@@ -428,28 +417,28 @@
   var intervalLog;
   var filterHandler = null;
   var mapHandler = null;
+
   /**
    * Assigns a handler to filter logs out of the queue.
    * @param  {Function} callback The handler to invoke when logging.
    */
-
   function setLogFilter(callback) {
     filterHandler = callback;
   }
+
   /**
    * Assigns a handler to transform logs from their default structure.
    * @param  {Function} callback The handler to invoke when logging.
    */
-
   function setLogMapper(callback) {
     mapHandler = callback;
   }
+
   /**
    * Assigns the config and log container to be used by the logging functions.
    * @param  {Array} newLogs   Log container.
    * @param  {Object} newConfig Configuration to use while logging.
    */
-
   function initPackager(newLogs, newConfig) {
     logs$1 = newLogs;
     config$1 = newConfig;
@@ -462,24 +451,21 @@
     intervalCounter = 0;
     intervalLog = null;
   }
+
   /**
    * Transforms the provided HTML event into a log and appends it to the log queue.
    * @param  {Object} e         The event to be logged.
    * @param  {Function} detailFcn The function to extract additional log parameters from the event.
    * @return {boolean}           Whether the event was logged.
    */
-
   function packageLog(e, detailFcn) {
     if (!config$1.on) {
       return false;
     }
-
     var details = null;
-
     if (detailFcn) {
       details = detailFcn(e);
     }
-
     var timeFields = extractTimeFields(e.timeStamp && e.timeStamp > 0 ? config$1.time(e.timeStamp) : Date.now());
     var log = {
       'target': getSelector(e.target),
@@ -504,18 +490,16 @@
       'useraleVersion': config$1.useraleVersion,
       'sessionID': config$1.sessionID
     };
-
     if (typeof filterHandler === 'function' && !filterHandler(log)) {
       return false;
     }
-
     if (typeof mapHandler === 'function') {
       log = mapHandler(log, e);
     }
-
     logs$1.push(log);
     return true;
   }
+
   /**
    * Packages the provided customLog to include standard meta data and appends it to the log queue.
    * @param  {Object} customLog        The behavior to be logged.
@@ -523,18 +507,14 @@
    * @param  {boolean} userAction     Indicates user behavior (true) or system behavior (false)
    * @return {boolean}           Whether the event was logged.
    */
-
   function packageCustomLog(customLog, detailFcn, userAction) {
     if (!config$1.on) {
       return false;
     }
-
     var details = null;
-
     if (detailFcn) {
       details = detailFcn();
     }
-
     var metaData = {
       'pageUrl': window.location.href,
       'pageTitle': document.title,
@@ -552,43 +532,42 @@
       'sessionID': config$1.sessionID
     };
     var log = Object.assign(metaData, customLog);
-
+    console.log(customLog);
     if (typeof filterHandler === 'function' && !filterHandler(log)) {
       return false;
     }
-
     if (typeof mapHandler === 'function') {
       log = mapHandler(log);
     }
-
     logs$1.push(log);
     return true;
   }
+
   /**
    * Extract the millisecond and microsecond portions of a timestamp.
    * @param  {Number} timeStamp The timestamp to split into millisecond and microsecond fields.
    * @return {Object}           An object containing the millisecond
    *                            and microsecond portions of the timestamp.
    */
-
   function extractTimeFields(timeStamp) {
     return {
       milli: Math.floor(timeStamp),
       micro: Number((timeStamp % 1).toFixed(3))
     };
   }
+
   /**
    * Track intervals and gather details about it.
    * @param {Object} e
    * @return boolean
    */
-
   function packageIntervalLog(e) {
     var target = getSelector(e.target);
     var path = buildPath(e);
     var type = e.type;
-    var timestamp = Math.floor(e.timeStamp && e.timeStamp > 0 ? config$1.time(e.timeStamp) : Date.now()); // Init - this should only happen once on initialization
+    var timestamp = Math.floor(e.timeStamp && e.timeStamp > 0 ? config$1.time(e.timeStamp) : Date.now());
 
+    // Init - this should only happen once on initialization
     if (intervalID == null) {
       intervalID = target;
       intervalType = type;
@@ -596,10 +575,10 @@
       intervalTimer = timestamp;
       intervalCounter = 0;
     }
-
     if (intervalID !== target || intervalType !== type) {
       // When to create log? On transition end
       // @todo Possible for intervalLog to not be pushed in the event the interval never ends...
+
       intervalLog = {
         'target': intervalID,
         'path': intervalPath,
@@ -623,38 +602,35 @@
         'useraleVersion': config$1.useraleVersion,
         'sessionID': config$1.sessionID
       };
-
       if (typeof filterHandler === 'function' && !filterHandler(intervalLog)) {
         return false;
       }
-
       if (typeof mapHandler === 'function') {
         intervalLog = mapHandler(intervalLog, e);
       }
+      logs$1.push(intervalLog);
 
-      logs$1.push(intervalLog); // Reset
-
+      // Reset
       intervalID = target;
       intervalType = type;
       intervalPath = path;
       intervalTimer = timestamp;
       intervalCounter = 0;
-    } // Interval is still occuring, just update counter
+    }
 
-
+    // Interval is still occuring, just update counter
     if (intervalID == target && intervalType == type) {
       intervalCounter = intervalCounter + 1;
     }
-
     return true;
   }
+
   /**
    * Extracts coordinate information from the event
    * depending on a few browser quirks.
    * @param  {Object} e The event to extract coordinate information from.
    * @return {Object}   An object containing nullable x and y coordinates for the event.
    */
-
   function getLocation(e) {
     if (e.pageX != null) {
       return {
@@ -673,23 +649,23 @@
       };
     }
   }
+
   /**
    * Extracts innerWidth and innerHeight to provide estimates of screen resolution
    * @return {Object} An object containing the innerWidth and InnerHeight
    */
-
   function getSreenRes() {
     return {
       'width': window.innerWidth,
       'height': window.innerHeight
     };
   }
+
   /**
    * Builds a string CSS selector from the provided element
    * @param  {HTMLElement} ele The element from which the selector is built.
    * @return {string}     The CSS selector for the element, or Unknown if it can't be determined.
    */
-
   function getSelector(ele) {
     if (ele.localName) {
       return ele.localName + (ele.id ? '#' + ele.id : '') + (ele.className ? '.' + ele.className : '');
@@ -701,44 +677,39 @@
       return "Unknown";
     }
   }
+
   /**
    * Builds an array of elements from the provided event target, to the root element.
    * @param  {Object} e Event from which the path should be built.
    * @return {HTMLElement[]}   Array of elements, starting at the event target, ending at the root element.
    */
-
   function buildPath(e) {
     var path = [];
-
     if (e.path) {
       path = e.path;
     } else {
       var ele = e.target;
-
       while (ele) {
         path.push(ele);
         ele = ele.parentElement;
       }
     }
-
     return selectorizePath(path);
   }
+
   /**
    * Builds a CSS selector path from the provided list of elements.
    * @param  {HTMLElement[]} path Array of HTMLElements from which the path should be built.
    * @return {string[]}      Array of string CSS selectors.
    */
-
   function selectorizePath(path) {
     var i = 0;
     var pathEle;
     var pathSelectors = [];
-
     while (pathEle = path[i]) {
       pathSelectors.push(getSelector(pathEle));
       ++i;
     }
-
     return pathSelectors;
   }
   function detectBrowser() {
@@ -746,7 +717,9 @@
       'browser': browser ? browser.name : '',
       'version': browser ? browser.version : ''
     };
-  } // Custom Functions
+  }
+
+  // Custom Functions
   // ================
 
   /**
@@ -755,25 +728,20 @@
    * @param  {Object} e Event from which the attributes should be extracted from.
    * @return {Object} Object with all element attributes as key value pairs.
    */
-
   function buildAttributes(e) {
     var attributes = {};
     var attributeBlackList = ["style"];
-
     if (e.target && e.target instanceof Element) {
       var _iterator = _createForOfIteratorHelper(e.target.attributes),
-          _step;
-
+        _step;
       try {
         for (_iterator.s(); !(_step = _iterator.n()).done;) {
           attr = _step.value;
           if (attributeBlackList.includes(attr.name)) continue;
           var val = attr.value;
-
           try {
             val = JSON.parse(val);
           } catch (error) {}
-
           attributes[attr.name] = val;
         }
       } catch (err) {
@@ -782,24 +750,20 @@
         _iterator.f();
       }
     }
-
     return attributes;
   }
+
   /**
    * Builds an object containing all css properties of an element.
    * @param  {Object} e Event from which the properties should be extracted from.
    * @return {Object} Object with all CSS properties as key value pairs.
    */
-
   function buildCSS(e) {
     var properties = {};
-
     if (e.target && e.target instanceof Element) {
       var styleObj = e.target.style;
-
       var _iterator2 = _createForOfIteratorHelper(styleObj),
-          _step2;
-
+        _step2;
       try {
         for (_iterator2.s(); !(_step2 = _iterator2.n()).done;) {
           prop = _step2.value;
@@ -811,7 +775,6 @@
         _iterator2.f();
       }
     }
-
     return properties;
   }
 
@@ -833,32 +796,32 @@
    */
   var events;
   var bufferBools;
-  var bufferedEvents; //@todo: Investigate drag events and their behavior
-
+  var bufferedEvents;
+  //@todo: Investigate drag events and their behavior
   var intervalEvents = ['click', 'focus', 'blur', 'input', 'change', 'mouseover', 'submit'];
   var refreshEvents;
   var windowEvents = ['load', 'blur', 'focus'];
+
   /**
    * Maps an event to an object containing useful information.
    * @param  {Object} e Event to extract data from
    */
-
   function extractMouseEvent(e) {
     return {
       'clicks': e.detail,
       'ctrl': e.ctrlKey,
       'alt': e.altKey,
       'shift': e.shiftKey,
-      'meta': e.metaKey //    'text' : e.target.innerHTML
-
+      'meta': e.metaKey
+      //    'text' : e.target.innerHTML
     };
   }
+
   /**
    * Defines the way information is extracted from various events.
    * Also defines which events we will listen to.
    * @param  {Object} config Configuration object to read from.
    */
-
   function defineDetails(config) {
     // Events list
     // Keys are event types
@@ -921,13 +884,13 @@
       'submit': null
     };
   }
+
   /**
    * Defines the way information is extracted from various events.
    * Also defines which events we will listen to.
    * @param  {Object} options UserALE.js Configuration object to read from.
    * @param   {string}    type of html event (e.g., 'click', 'mouseover', etc.), such as passed to addEventListener methods.
    */
-
   function defineCustomDetails(options, type) {
     // Events list
     // Keys are event types
@@ -986,12 +949,12 @@
     };
     return eventType[type];
   }
+
   /**
    * Hooks the event handlers for each event type of interest.
    * @param  {Object} config Configuration object to use.
    * @return {boolean}        Whether the operation succeeded
    */
-
   function attachHandlers(config) {
     defineDetails(config);
     Object.keys(events).forEach(function (ev) {
@@ -1049,21 +1012,22 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
+
   var sendIntervalId = null;
+
   /**
    * Initializes the log queue processors.
    * @param  {Array} logs   Array of logs to append to.
    * @param  {Object} config Configuration object to use when logging.
    */
-
   function initSender(logs, config) {
     if (sendIntervalId !== null) {
       clearInterval(sendIntervalId);
     }
-
     sendIntervalId = sendOnInterval(logs, config);
     sendOnClose(logs, config);
   }
+
   /**
    * Checks the provided log array on an interval, flushing the logs
    * if the queue has reached the threshold specified by the provided config.
@@ -1071,26 +1035,23 @@
    * @param  {Object} config Configuration object to be read from.
    * @return {Number}        The newly created interval id.
    */
-
   function sendOnInterval(logs, config) {
     return setInterval(function () {
       if (!config.on) {
         return;
       }
-
       if (logs.length >= config.logCountThreshold) {
         sendLogs(logs.slice(0), config, 0); // Send a copy
-
         logs.splice(0); // Clear array reference (no reassignment)
       }
     }, config.transmitInterval);
   }
+
   /**
    * Attempts to flush the remaining logs when the window is closed.
    * @param  {Array} logs   Array of logs to be flushed.
    * @param  {Object} config Configuration object to be read from.
    */
-
   function sendOnClose(logs, config) {
     window.addEventListener('pagehide', function () {
       if (logs.length > 0) {
@@ -1099,6 +1060,7 @@
       }
     });
   }
+
   /**
    * Sends the provided array of logs to the specified url,
    * retrying the request up to the specified number of retries.
@@ -1118,7 +1080,8 @@
         body: data
       }).then(function (response) {
         return response.json();
-      }) //@todo: add retries
+      })
+      //@todo: add retries
       //@todo: add auth headers
       .then(function (data) {
         console.log('Success:', data);
@@ -1126,18 +1089,15 @@
         console.error('Error:', error);
       });
     } else {
-      var req = new XMLHttpRequest(); // @todo setRequestHeader for Auth
+      var req = new XMLHttpRequest();
 
+      // @todo setRequestHeader for Auth
       var _data = JSON.stringify(logs);
-
       req.open('POST', config.url);
-
       if (config.authHeader) {
         req.setRequestHeader('Authorization', config.authHeader);
       }
-
       req.setRequestHeader('Content-type', 'application/json;charset=UTF-8');
-
       req.onreadystatechange = function () {
         if (req.readyState === 4 && req.status !== 200) {
           if (retries > 0) {
@@ -1145,7 +1105,6 @@
           }
         }
       };
-
       req.send(_data);
     }
   }
@@ -1154,33 +1113,29 @@
   var logs = [];
   var startLoadTimestamp = Date.now();
   var endLoadTimestamp;
-
   window.onload = function () {
     endLoadTimestamp = Date.now();
   };
-
   exports.started = false;
 
+  // Start up Userale
   config.on = false;
   config.useraleVersion = version$1;
   configure(config, getInitialSettings());
   initPackager(logs, config);
-
   if (config.autostart) {
     setup(config);
   }
+
   /**
    * Hooks the global event listener, and starts up the
    * logging interval.
    * @param  {Object} config Configuration settings for the logger
    */
-
-
   function setup(config) {
     if (!exports.started) {
       setTimeout(function () {
         var state = document.readyState;
-
         if (config.autostart && (state === 'interactive' || state === 'complete')) {
           attachHandlers(config);
           initSender(logs, config);
@@ -1195,49 +1150,48 @@
         }
       }, 100);
     }
-  } // Export the Userale API
+  }
 
-
+  // Export the Userale API
   var version = version$1;
+
   /**
    * Used to start the logging process if the
    * autostart configuration option is set to false.
    */
-
   function start() {
     if (!exports.started || config.autostart === false) {
       exports.started = config.on = true;
       config.autostart = true;
     }
   }
+
   /**
    * Halts the logging process. Logs will no longer be sent.
    */
-
   function stop() {
     exports.started = config.on = false;
     config.autostart = false;
   }
+
   /**
    * Updates the current configuration
    * object with the provided values.
    * @param  {Object} newConfig The configuration options to use.
    * @return {Object}           Returns the updated configuration.
    */
-
   function options(newConfig) {
     if (newConfig !== undefined) {
       configure(config, newConfig);
     }
-
     return config;
   }
+
   /**
    * Appends a log to the log queue.
    * @param  {Object} customLog The log to append.
    * @return {boolean}          Whether the operation succeeded.
    */
-
   function log(customLog) {
     if (customLog !== null && _typeof(customLog) === 'object') {
       logs.push(customLog);

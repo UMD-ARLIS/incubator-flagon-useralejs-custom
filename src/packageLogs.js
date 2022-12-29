@@ -159,6 +159,7 @@ export function packageCustomLog(customLog, detailFcn, userAction) {
     };
 
     let log = Object.assign(metaData, customLog);
+    console.log(customLog);
 
     if ((typeof filterHandler === 'function') && !filterHandler(log)) {
         return false;

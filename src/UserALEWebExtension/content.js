@@ -19,7 +19,8 @@
 
 import * as globals from './globals';
 import * as MessageTypes from './messageTypes.js';
-import { filter, options, map, packageCustomLog, buildPath } from '../main.js';
+import { filter, options, map, packageCustomLog, buildPath, getSelector } from '../main.js';
+import { details } from 'flagon-userale';
 
 // browser is defined in firefox, but not in chrome. In chrome, they use
 // the 'chrome' global instead. Let's map it to browser so we don't have
@@ -98,6 +99,23 @@ filter(function (log) {
 //   packageCustomLog(log);
 //  });
 
+ // Select the node that will be observed for mutations
+ const targetNode = document;
 
+ // Options for the observer (which mutations to observe)
+ const config = { attributes: true, childList: true, subtree: true };
 
-
+ // Callback function to execute when mutations are observed
+ const callback = (mutationList, observer) => {
+  mutationList = mutationList.map(mutation => {
+    return {type: mutation.type,
+    target: getSelector(mutation.target)};
+  });
+  packageCustomLog({mutations:mutationList}, null, false);
+ };
+ 
+ // Create an observer instance linked to the callback function
+ const observer = new MutationObserver(callback);
+ 
+ // Start observing the target node for configured mutations
+ observer.observe(targetNode, config);
