@@ -89,7 +89,7 @@ filter(function (log) {
   return !type_array.includes(log.type) && !logType_array.includes(log.logType);
 });
 
-//logs attributes from SVGs, Canvas, and other data that's attached to HTML
+// logs attributes from SVGs, Canvas, and other data that's attached to HTML
 // window.addEventListener('click', function(e) {
 //   let log = { description: "Attributes of event target ",
 //       logType: "custom",
@@ -98,6 +98,24 @@ filter(function (log) {
 //   packageCustomLog(log);
 //  });
 
+var s = document.createElement('script');
+s.src = browser.runtime.getURL('socketSniffer.js');
+s.onload = function() {
+    this.remove();
+};
+  
+(document.head || document.documentElement).appendChild(s);
 
+document.addEventListener('WebSocketReceive', function (e) {
+  packageCustomLog({
+    type: 'WebSocketReceive',
+    data: e.detail,
+  }, null, false);
+});
 
-
+document.addEventListener('WebSocketSend', function (e) {
+  packageCustomLog({
+    type: 'WebSocketSend',
+    data: e.detail,
+  }, null, false);
+});

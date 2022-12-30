@@ -16,12 +16,14 @@
 */
 
 /* eslint-disable */
+
 // these are default values, which can be overridden by the user on the options page
 var userAleHost = 'http://localhost:8000';
 var userAleScript = 'userale-2.3.0.min.js';
 var toolUser = 'nobody';
 var toolName = 'test_app';
 var toolVersion = '2.3.0';
+
 /* eslint-enable */
 
 /*
@@ -40,6 +42,7 @@ var toolVersion = '2.3.0';
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
+
 var prefix = 'USERALE_';
 var CONFIG_CHANGE = prefix + 'CONFIG_CHANGE';
 var ADD_LOG = prefix + 'ADD_LOG';
@@ -60,15 +63,14 @@ var ADD_LOG = prefix + 'ADD_LOG';
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 /**
  * Creates a function to normalize the timestamp of the provided event.
  * @param  {Object} e An event containing a timeStamp property.
  * @return {timeStampScale~tsScaler}   The timestamp normalizing function.
  */
-
 function timeStampScale(e) {
   var tsScaler;
-
   if (e.timeStamp && e.timeStamp > 0) {
     var delta = Date.now() - e.timeStamp;
     /**
@@ -83,7 +85,6 @@ function timeStampScale(e) {
       };
     } else if (delta > e.timeStamp) {
       var navStart = performance.timing.navigationStart;
-
       tsScaler = function tsScaler(ts) {
         return ts + navStart;
       };
@@ -97,7 +98,6 @@ function timeStampScale(e) {
       return Date.now();
     };
   }
-
   return tsScaler;
 }
 
@@ -308,13 +308,13 @@ function createVersionParts(count) {
 }
 
 detect();
+
 /**
  * Extract the millisecond and microsecond portions of a timestamp.
  * @param  {Number} timeStamp The timestamp to split into millisecond and microsecond fields.
  * @return {Object}           An object containing the millisecond
  *                            and microsecond portions of the timestamp.
  */
-
 function extractTimeFields(timeStamp) {
   return {
     milli: Math.floor(timeStamp),
@@ -338,21 +338,22 @@ function extractTimeFields(timeStamp) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 var sendIntervalId = null;
+
 /**
  * Initializes the log queue processors.
  * @param  {Array} logs   Array of logs to append to.
  * @param  {Object} config Configuration object to use when logging.
  */
-
 function initSender(logs, config) {
   if (sendIntervalId !== null) {
     clearInterval(sendIntervalId);
   }
-
   sendIntervalId = sendOnInterval(logs, config);
   sendOnClose(logs, config);
 }
+
 /**
  * Checks the provided log array on an interval, flushing the logs
  * if the queue has reached the threshold specified by the provided config.
@@ -360,26 +361,23 @@ function initSender(logs, config) {
  * @param  {Object} config Configuration object to be read from.
  * @return {Number}        The newly created interval id.
  */
-
 function sendOnInterval(logs, config) {
   return setInterval(function () {
     if (!config.on) {
       return;
     }
-
     if (logs.length >= config.logCountThreshold) {
       sendLogs(logs.slice(0), config, 0); // Send a copy
-
       logs.splice(0); // Clear array reference (no reassignment)
     }
   }, config.transmitInterval);
 }
+
 /**
  * Attempts to flush the remaining logs when the window is closed.
  * @param  {Array} logs   Array of logs to be flushed.
  * @param  {Object} config Configuration object to be read from.
  */
-
 function sendOnClose(logs, config) {
   window.addEventListener('pagehide', function () {
     if (logs.length > 0) {
@@ -388,6 +386,7 @@ function sendOnClose(logs, config) {
     }
   });
 }
+
 /**
  * Sends the provided array of logs to the specified url,
  * retrying the request up to the specified number of retries.
@@ -407,7 +406,8 @@ function sendLogs(logs, config, retries) {
       body: data
     }).then(function (response) {
       return response.json();
-    }) //@todo: add retries
+    })
+    //@todo: add retries
     //@todo: add auth headers
     .then(function (data) {
       console.log('Success:', data);
@@ -415,18 +415,15 @@ function sendLogs(logs, config, retries) {
       console.error('Error:', error);
     });
   } else {
-    var req = new XMLHttpRequest(); // @todo setRequestHeader for Auth
+    var req = new XMLHttpRequest();
 
+    // @todo setRequestHeader for Auth
     var _data = JSON.stringify(logs);
-
     req.open('POST', config.url);
-
     if (config.authHeader) {
       req.setRequestHeader('Authorization', config.authHeader);
     }
-
     req.setRequestHeader('Content-type', 'application/json;charset=UTF-8');
-
     req.onreadystatechange = function () {
       if (req.readyState === 4 && req.status !== 200) {
         if (retries > 0) {
@@ -434,7 +431,6 @@ function sendLogs(logs, config, retries) {
         }
       }
     };
-
     req.send(_data);
   }
 }
@@ -455,6 +451,9 @@ function sendLogs(logs, config, retries) {
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+// inherent dependency on globals.js, loaded by the webext
+
 // browser is defined in firefox, but not in chrome. In chrome, they use
 // the 'chrome' global instead. Let's map it to browser so we don't have
 // to have if-conditions all over the place.
@@ -487,7 +486,6 @@ browser.storage.local.get({
   toolName: toolName,
   toolVersion: toolVersion
 }, storeCallback);
-
 function storeCallback(item) {
   config = Object.assign({}, config, {
     url: item.userAleHost,
@@ -498,7 +496,6 @@ function storeCallback(item) {
   });
   initSender(logs, config);
 }
-
 function dispatchTabMessage(message) {
   browser.tabs.query({}, function (tabs) {
     tabs.forEach(function (tab) {
@@ -506,7 +503,6 @@ function dispatchTabMessage(message) {
     });
   });
 }
-
 function packageBrowserLog(type, logDetail) {
   var timeFields = extractTimeFields(getTimestamp());
   logs.push({
@@ -526,7 +522,6 @@ function packageBrowserLog(type, logDetail) {
     'sessionID': sessionId
   });
 }
-
 browser.runtime.onMessage.addListener(function (message) {
   switch (message.type) {
     case CONFIG_CHANGE:
@@ -540,21 +535,16 @@ browser.runtime.onMessage.addListener(function (message) {
         initSender(logs, updatedConfig);
         dispatchTabMessage(message);
       })();
-
       break;
-
     case ADD_LOG:
       (function () {
         logs.push(message.payload);
       })();
-
       break;
-
     default:
       console.log('got unknown message type ', message);
   }
 });
-
 function getTabDetailById(tabId, onReady) {
   browser.tabs.get(tabId, function (tab) {
     onReady({
@@ -572,7 +562,6 @@ function getTabDetailById(tabId, onReady) {
     });
   });
 }
-
 browser.tabs.onActivated.addListener(function (e) {
   getTabDetailById(e.tabId, function (detail) {
     packageBrowserLog('tabs.onActivated', detail);
@@ -616,6 +605,7 @@ browser.tabs.onZoomChange.addListener(function (e) {
     }, detail));
   });
 });
+
 /*
  eslint-enable
  */

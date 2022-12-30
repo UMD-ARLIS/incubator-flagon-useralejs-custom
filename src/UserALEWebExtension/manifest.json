@@ -29,5 +29,9 @@
   ],
   "options_ui": {
     "page": "optionsPage.html"
-  }
+  },
+  "web_accessible_resources": [{
+    "resources": ["socketSniffer.js"],
+    "matches": ["<all_urls>"]
+  }]
 }
