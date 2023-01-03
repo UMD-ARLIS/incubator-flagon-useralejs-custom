@@ -31,7 +31,7 @@
     "page": "optionsPage.html"
   },
   "web_accessible_resources": [{
-    "resources": ["socketSniffer.js"],
+    "resources": ["networkSniffer.js"],
     "matches": ["<all_urls>"]
   }]
 }

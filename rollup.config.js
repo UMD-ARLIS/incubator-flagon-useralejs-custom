@@ -64,7 +64,7 @@ export default [
                 plugins: ["@babel/plugin-transform-block-scoping"]
             })]
     },
-    ...['content.js', 'background.js', 'options.js', 'socketSniffer.js'].map(fileName => ({
+    ...['content.js', 'background.js', 'options.js', 'networkSniffer.js'].map(fileName => ({
         input: srcWebExtensionDir + fileName,
         output: {
             format: 'esm',

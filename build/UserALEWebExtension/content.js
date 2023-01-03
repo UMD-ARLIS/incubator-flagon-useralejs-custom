@@ -1208,7 +1208,7 @@ setLogFilter(function (log) {
 //  });
 
 var s = document.createElement('script');
-s.src = browser.runtime.getURL('socketSniffer.js');
+s.src = browser.runtime.getURL('networkSniffer.js');
 s.onload = function () {
   this.remove();
 };
@@ -1216,12 +1216,18 @@ s.onload = function () {
 document.addEventListener('WebSocketReceive', function (e) {
   packageCustomLog({
     type: 'WebSocketReceive',
-    data: e.detail
+    details: e.detail
   }, null, false);
 });
 document.addEventListener('WebSocketSend', function (e) {
   packageCustomLog({
     type: 'WebSocketSend',
-    data: e.detail
+    details: e.detail
+  }, null, false);
+});
+document.addEventListener('httpResponse', function (e) {
+  packageCustomLog({
+    type: 'httpResponse',
+    details: e.detail
   }, null, false);
 });
