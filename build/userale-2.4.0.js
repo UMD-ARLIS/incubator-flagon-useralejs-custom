@@ -22,14 +22,14 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global.userale = {}));
 })(this, (function (exports) { 'use strict';
 
-  function _typeof(o) {
+  function _typeof(obj) {
     "@babel/helpers - typeof";
 
-    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
-      return typeof o;
-    } : function (o) {
-      return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-    }, _typeof(o);
+    return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+      return typeof obj;
+    } : function (obj) {
+      return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+    }, _typeof(obj);
   }
 
   var version$1 = "2.4.0";
@@ -416,7 +416,6 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
-
   var browser = detect();
   var logs$1;
   var config$1;
@@ -765,7 +764,6 @@
    * See the License for the specific language governing permissions and
    * limitations under the License.
    */
-
   var events;
   var bufferBools;
   var bufferedEvents;
@@ -1171,7 +1169,6 @@
           exports.started = config.on = true;
           packageCustomLog({
             type: 'load',
-            logType: 'raw',
             details: {
               pageLoadTime: endLoadTimestamp - startLoadTimestamp
             }
@@ -1245,5 +1242,7 @@
   exports.start = start;
   exports.stop = stop;
   exports.version = version;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
 
 }));
